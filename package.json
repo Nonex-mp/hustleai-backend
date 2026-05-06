@@ -1,15 +1,3 @@
-  "name": "hustleai-backend",
-  "version": "1.0.0",
-  "scripts": {
-    "start": "node server.js"
-  },
-  "dependencies": {
-    "express": "^4.21.0",
-    "cors": "^2.8.5",
-    "openai": "^4.0.0",
-    "dotenv": "^16.4.5"
-  }
-
 {
   "name": "hustleai-backend",
   "version": "1.0.0",
@@ -22,5 +10,4 @@
     "openai": "^4.0.0",
     "dotenv": "^16.4.5"
   }
-d43009da15828ea9dd1adcf5cf81d45197232bc1
 }
