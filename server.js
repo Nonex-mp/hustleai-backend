@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const OpenAI = require('openai'); // We use the OpenAI library to talk to Groq
+const OpenAI = require('openai'); 
 require('dotenv').config();
 
 const app = express();
@@ -8,7 +8,6 @@ app.use(cors());
 app.use(express.json());
 
 // --- GROQ CONFIGURATION ---
-// We point the OpenAI client to Groq's API endpoint
 const groq = new OpenAI({
   apiKey: process.env.GROQ_API_KEY,
   baseURL: "https://api.groq.com/openai/v1"
@@ -30,7 +29,7 @@ Age: ${age}, Skills: ${skills}, Time: ${time}, Budget: ${budget}.
 Return ONLY a JSON object with a key "ideas" containing an array of 3 objects (title, earning, description, steps).`;
 
     const completion = await groq.chat.completions.create({
-      model: "llama3-8b-8192", // Fast and free model on Groq
+      model: "llama-3.1-8b-instant", // UPDATED: llama3-8b-8192 is decommissioned
       messages: [{ role: "user", content: prompt }],
       response_format: { type: "json_object" }
     });
@@ -88,7 +87,7 @@ app.post('/create-checkout', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 10000; // Render usually uses 10000
+const PORT = process.env.PORT || 10000; 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server live on port ${PORT}`);
 });
