@@ -1,58 +1,94 @@
 const express = require('express');
 const cors = require('cors');
-const OpenAI = require('openai');
+const OpenAI = require('openai'); // We use the OpenAI library to talk to Groq
 require('dotenv').config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
+// --- GROQ CONFIGURATION ---
+// We point the OpenAI client to Groq's API endpoint
+const groq = new OpenAI({
+  apiKey: process.env.GROQ_API_KEY,
+  baseURL: "https://api.groq.com/openai/v1"
 });
 
+// --- BASE ROUTE (For HetrixTools Pings) ---
+app.get('/', (req, res) => {
+  res.status(200).send('HustleAI Backend is Awake');
+});
+
+// --- HUSTLE GENERATION ROUTE ---
 app.post('/generate', async (req, res) => {
   try {
     const { age, skills, time, budget } = req.body;
 
     const prompt = `You are a practical Filipino business mentor for students.
-Create 3 realistic hustle ideas.
-Details:
-- Age: ${age}
-- Skills: ${skills}
-- Time per day: ${time}
-- Budget: ${budget}
+Create 3 realistic hustle ideas for a student in the Philippines based on:
+Age: ${age}, Skills: ${skills}, Time: ${time}, Budget: ${budget}.
+Return ONLY a JSON object with a key "ideas" containing an array of 3 objects (title, earning, description, steps).`;
 
-For each idea, return JSON like this:
-{
-  "title": "Short catchy title",
-  "earning": "Estimated earning per week (PHP)",
-  "description": "2-3 sentences description",
-  "steps": "Step-by-step guide"
-}
-Make ideas very realistic for the Philippines.`;
-
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+    const completion = await groq.chat.completions.create({
+      model: "llama3-8b-8192", // Fast and free model on Groq
       messages: [{ role: "user", content: prompt }],
-      temperature: 0.8
+      response_format: { type: "json_object" }
     });
 
-    const text = completion.choices[0].message.content;
-
-    // Return the AI response
-    res.json({ ideas: [{ title: "AI Generated Plan", earning: "Calculating...", description: text, steps: "See full response" }] });
-
+    res.json(JSON.parse(completion.choices[0].message.content));
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Something went wrong" });
+    console.error("Groq AI Error:", error);
+    res.status(500).json({ error: "AI Error: Check logs" });
   }
 });
 
-// Render uses process.env.PORT to assign a port automatically
-const PORT = process.env.PORT || 3000;
+// --- PAYMONGO CHECKOUT ROUTE ---
+app.post('/create-checkout', async (req, res) => {
+  try {
+    const secretKey = Buffer.from(process.env.PAYMONGO_SECRET_KEY + ':').toString('base64');
 
-// '0.0.0.0' allows the server to accept external connections on Render
+    const response = await fetch('https://api.paymongo.com/v1/checkout_sessions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Basic ${secretKey}`
+      },
+      body: JSON.stringify({
+        data: {
+          attributes: {
+            send_email_receipt: true,
+            show_description: true,
+            line_items: [
+              {
+                currency: 'PHP',
+                amount: 9900, 
+                description: 'HustleAI Premium Plan',
+                name: '30-Day Detailed Strategy',
+                quantity: 1
+              }
+            ],
+            payment_method_types: ['gcash', 'paymaya', 'card'],
+            description: 'Unlock full scripts and 30-day guide'
+          }
+        }
+      })
+    });
+
+    const session = await response.json();
+    
+    if (session.errors) {
+      return res.status(400).json({ error: session.errors[0].detail });
+    }
+
+    res.json({ checkout_url: session.data.attributes.checkout_url });
+
+  } catch (error) {
+    console.error("Payment Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+const PORT = process.env.PORT || 10000; // Render usually uses 10000
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`✅ Backend running on port ${PORT}`);
+  console.log(`Server live on port ${PORT}`);
 });
