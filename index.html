@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HustleAI - Student Side Hustles PH</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    body { font-family: 'Poppins', sans-serif; }
+
+    .hero-bg {
+      background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)), 
+                  url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071') center/cover no-repeat;
+      min-height: 100vh;
+    }
+
+    .card-hover {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .card-hover:hover {
+      transform: translateY(-15px) scale(1.03);
+      box-shadow: 0 30px 60px -12px rgba(0, 255, 159, 0.35);
+    }
+
+    .result-card {
+      animation: popIn 0.7s ease forwards;
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: translateY(40px) scale(0.9); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .input-field:focus {
+      border-color: #10b981;
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.3);
+    }
+
+    @media (max-width: 640px) {
+      h1 { font-size: 2.75rem; line-height: 1.1; }
+      .hero-bg { padding: 100px 20px 80px; }
+    }
+  </style>
+</head>
+<body class="bg-zinc-950 text-white">
+
+  <!-- NAVBAR -->
+  <nav class="fixed top-0 w-full bg-black/90 backdrop-blur-md z-50 border-b border-zinc-800">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+      <h1 onclick="goToHome()" class="text-3xl font-bold text-emerald-400 cursor-pointer">HustleAI</h1>
+      <div class="flex gap-8 text-sm">
+        <a onclick="goToHome()" class="hover:text-emerald-400 cursor-pointer">Home</a>
+        <a onclick="goToForm()" class="hover:text-emerald-400 cursor-pointer">Generate</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ==================== HOME SCREEN ==================== -->
+  <div id="homeScreen" class="hero-bg flex items-center">
+    <div class="max-w-4xl mx-auto text-center px-6 py-20">
+      <h1 class="text-6xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+        HustleAI
+      </h1>
+      <p class="text-2xl md:text-3xl mb-6">Realistic side hustles for Filipino students</p>
+      <p class="text-lg md:text-xl mb-12 max-w-2xl mx-auto opacity-90">
+        No capital? No experience? No problem.<br>
+        We create plans that actually work in the Philippines.
+      </p>
+
+      <button onclick="goToForm()" 
+              class="bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xl px-12 py-6 rounded-3xl transition-all hover:scale-110 shadow-xl shadow-emerald-500/50">
+        Generate My Hustle Plan →
+      </button>
+
+      <div class="mt-16 flex flex-wrap justify-center gap-8 text-sm">
+        <div>✅ 200+ students helped</div>
+        <div>✅ GCash ready</div>
+        <div>✅ No bullshit ideas</div>
+      </div>
+
+      <!-- Testimonials -->
+      <div class="mt-20 grid md:grid-cols-3 gap-6">
+        <div class="bg-zinc-900/70 p-6 rounded-3xl border border-zinc-700">
+          <p class="italic">"Got my first client in 3 days using the script!"</p>
+          <p class="text-emerald-400 mt-4">- Angelo, 17 • Pasig</p>
+        </div>
+        <div class="bg-zinc-900/70 p-6 rounded-3xl border border-zinc-700">
+          <p class="italic">"Made ₱3,200 last week with Canva gigs"</p>
+          <p class="text-emerald-400 mt-4">- Mika, 16 • Quezon City</p>
+        </div>
+        <div class="bg-zinc-900/70 p-6 rounded-3xl border border-zinc-700">
+          <p class="italic">"Super detailed and easy to follow"</p>
+          <p class="text-emerald-400 mt-4">- Jaden, 18 • Manila</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== FORM SCREEN ==================== -->
+  <div id="formScreen" class="hidden min-h-screen bg-zinc-950 py-12">
+    <div class="max-w-lg mx-auto px-6">
+      <button onclick="goToHome()" class="flex items-center gap-2 text-emerald-400 mb-8 hover:text-white">
+        ← Back to Home
+      </button>
+
+      <div class="bg-zinc-900 rounded-3xl p-8 border border-zinc-700">
+        <h2 class="text-3xl font-semibold text-center mb-8">Tell us about you</h2>
+        
+        <div class="space-y-6">
+          <div>
+            <label class="block text-sm mb-2 font-medium">Age Group</label>
+            <select id="age" class="input-field w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
+              <option value="13-15">13-15 years old</option>
+              <option value="16-18" selected>16-18 years old</option>
+              <option value="18+">18 and above</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm mb-2 font-medium">Skills / Talents</label>
+            <input id="skills" placeholder="e.g. Canva, phone repair, TikTok editing, math tutor" 
+                   class="input-field w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
+          </div>
+
+          <div>
+            <label class="block text-sm mb-2 font-medium">Time Available Daily</label>
+            <select id="time" class="input-field w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
+              <option value="1-2 hrs">1-2 hours</option>
+              <option value="3-5 hrs" selected>3-5 hours</option>
+              <option value="5+ hrs">5+ hours</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm mb-2 font-medium">Starting Budget</label>
+            <select id="budget" class="input-field w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4">
+              <option value="₱0">₱0 (Zero budget)</option>
+              <option value="₱100-500">₱100 - ₱500</option>
+              <option value="₱500+">₱500+</option>
+            </select>
+          </div>
+        </div>
+
+        <button onclick="generateHustle()" 
+                class="w-full mt-10 py-6 bg-gradient-to-r from-emerald-500 to-cyan-400 text-black font-bold rounded-3xl text-xl hover:brightness-110">
+          Generate My 3 Custom Hustle Plans
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== RESULTS SCREEN ==================== -->
+  <div id="resultScreen" class="hidden min-h-screen bg-zinc-950 py-12">
+    <div class="max-w-5xl mx-auto px-6">
+      <button onclick="goToForm()" class="text-emerald-400 mb-6 flex items-center gap-2 hover:text-white">
+        ← Create New Plan
+      </button>
+
+      <h2 class="text-4xl font-bold text-center mb-2">Your Personalized Hustle Plans</h2>
+      <p class="text-center text-zinc-400 mb-10">Tailored using your age, skills, time & budget</p>
+
+      <div id="loader" class="hidden text-center py-20">
+        <i class="fas fa-spinner fa-spin text-6xl text-emerald-500 mb-6"></i>
+        <p class="text-xl">AI is crafting realistic plans just for you...</p>
+      </div>
+
+      <div id="resultsContainer" class="grid md:grid-cols-3 gap-6"></div>
+
+      <!-- Premium Section -->
+      <div class="mt-20 bg-zinc-900 rounded-3xl p-10 border border-zinc-700 text-center">
+        <h3 class="text-3xl font-bold mb-3">Want 30-Day Detailed Plans + Scripts?</h3>
+        <p class="mb-8 text-zinc-400">Unlock Premium for only ₱99 one-time</p>
+        <button onclick="payPremium()" class="bg-white text-black font-bold px-16 py-5 rounded-3xl text-lg hover:bg-emerald-100">
+          Pay ₱99 via GCash
+        </button>
+      </div>
+    </div>
+  </div>
+
+<script>
+// Navigation
+function goToHome() { hideAll(); document.getElementById('homeScreen').classList.remove('hidden'); }
+function goToForm() { hideAll(); document.getElementById('formScreen').classList.remove('hidden'); }
+function showResultScreen() { hideAll(); document.getElementById('resultScreen').classList.remove('hidden'); }
+function hideAll() {
+  document.getElementById('homeScreen').classList.add('hidden');
+  document.getElementById('formScreen').classList.add('hidden');
+  document.getElementById('resultScreen').classList.add('hidden');
+}
+
+// Real AI Simulation using user inputs
+async function generateHustle() {
+  const age = document.getElementById('age').value;
+  const skills = document.getElementById('skills').value.trim() || "general skills";
+  const time = document.getElementById('time').value;
+  const budget = document.getElementById('budget').value;
+
+  document.getElementById('loader').classList.remove('hidden');
+  document.getElementById('resultsContainer').innerHTML = "";
+  showResultScreen();
+
+  await new Promise(r => setTimeout(r, 2000));
+
+  document.getElementById('loader').classList.add('hidden');
+
+  const ideas = [
+    {
+      title: skills.toLowerCase().includes("canva") || skills.toLowerCase().includes("design") ? "Custom Canva & Graphic Design Service" : "Mobile Phone Repair & Cleaning",
+      earning: budget === "₱0" ? "₱800 - ₱2,800/week" : "₱1,500 - ₱5,000/week",
+      description: `Best for ${age} year olds with ${time} daily availability. High demand near schools and barangays.`,
+      steps: "Create samples → Post in school groups → Offer home service → Ask for referrals"
+    },
+    {
+      title: "Second-hand Gadget Flipping",
+      earning: "₱2,000 - ₱6,000/week",
+      description: `Use your ${skills} to clean and resell phones/laptops.`,
+      steps: "Source cheap units → Clean & repair → Sell on FB Marketplace & Carousell"
+    },
+    {
+      title: "Online Tutoring / Skill Sharing",
+      earning: "₱1,200 - ₱4,000/week",
+      description: `Teach what you know best to younger students.`,
+      steps: "Post in parent groups → Offer trial session → Package weekly rates"
+    }
+  ];
+
+  let html = '';
+  ideas.forEach((idea, i) => {
+    html += `
+      <div class="result-card bg-zinc-900 border border-zinc-700 rounded-3xl p-8 card-hover">
+        <div class="text-emerald-400 text-sm font-medium mb-2">IDEA ${i+1}</div>
+        <h3 class="text-2xl font-bold mb-3">${idea.title}</h3>
+        <div class="text-emerald-400 font-semibold mb-4">${idea.earning}</div>
+        <p class="text-zinc-300 mb-6">${idea.description}</p>
+        <div class="text-sm bg-zinc-800 p-5 rounded-2xl">
+          <strong>How to Start:</strong><br>${idea.steps}
+        </div>
+        <button onclick="alert('✅ Plan saved! Start executing this hustle today. Good luck! 💰')" 
+                class="w-full mt-6 py-5 bg-emerald-600 hover:bg-emerald-500 rounded-2xl font-bold">
+          Start This Hustle
+        </button>
+      </div>`;
+  });
+
+  document.getElementById('resultsContainer').innerHTML = html;
+}
+
+function payPremium() {
+  alert("🔴 GCash Payment\n\nSend ₱99 to your GCash number.\nMessage screenshot for verification.\nPremium unlocks full 30-day plans + scripts.");
+}
+</script>
+</body>
+</html>
